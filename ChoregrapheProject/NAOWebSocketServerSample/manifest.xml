@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package version="0.0.1" uuid="naowebsocketserversample-bcfe8d">
+ <names>
+  <name lang="en_US">NAOWebSocketServerSample</name>
+ </names>
+ <descriptionLanguages>
+  <language>en_US</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="behavior_1">
+   <nature>interactive</nature>
+   <permissions/>
+  </behaviorContent>
+ </contents>
+ <requirements>
+  <naoqiRequirement minVersion="2.1.4.13"/>
+  <robotRequirement model="JULIETTE"/>
+  <robotRequirement model="NAO"/>
+ </requirements>
+ <services>
+  <service autorun="false" execStart="/usr/bin/python2 services/SRNAOWebSocketService.py" name="SRNAOWebSocketService"/>
+ </services>
+</package>

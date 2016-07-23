@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NAO WebSocketServer Sample</title>
+</head>
+<body style="font-size: 2em;">
+  NAO IP Address
+  <input id="connect_txt" style="font-size: 1em;" type="text" id="ipaddress" size="20" value="<robotip>:9091" />
+  <button id="connect_btn" style="font-size: 1em;" type="button" onclick="connect();" text="connect">connect</button>
+  <p />
+  Say
+  <input id="say_txt" style="font-size: 1em;" type="text" id="saytext" size="30" />
+  <button id="say_btn" style="font-size: 1em;" type="button" onclick="say();" text="connect">say</button>
+  <hr/>
+  From NAO
+  <br>
+  <textarea id="fromnao_txt" style="font-size:1em;width:80%; height:100px;"></textarea>
+
+</body>
+<script type="text/javascript">
+    var webSocket = null;
+    var connect_btn = document.getElementById('connect_btn');
+    var connect_txt = document.getElementById('connect_txt');
+    var say_btn = document.getElementById('say_btn');
+    var say_txt = document.getElementById('say_txt');
+    var fromnao_txt = document.getElementById('fromnao_txt');
+
+    say_btn.disabled = true;
+
+    function connect() {
+      var uri = "ws://" + connect_txt.value + "/ws";
+      if (webSocket == null) {
+        webSocket = new WebSocket(uri);
+        webSocket.onopen = onOpen;
+        webSocket.onmessage = onMessage;
+        webSocket.onclose = onClose;
+        webSocket.onerror = onError;
+      }
+    }
+
+    // 接続イベント
+    function onOpen(event) {
+      say_btn.disabled = false;
+    }
+
+    function onMessage(event) {
+      if (event && event.data) {
+        showMessage(event.data);
+      }
+    }
+
+    function onError(event) {
+      say_btn.disabled = true;
+    }
+
+    function onClose(event) {
+      say_btn.disabled = true;
+      console.log("Connection closed! Reconnecting after 3 seconds.");
+      webSocket = null;
+      setTimeout("open()", 3000);
+    }
+
+    function showMessage(message)
+    {
+      console.log(message);
+      fromnao_txt.value = fromnao_txt.value + message + "\n";
+      fromnao_txt.scrollTop = fromnao_txt.scrollHeight;
+    }
+
+    function say()
+    {
+      webSocket.send(say_txt.value);
+    }
+</script>
+</html>
